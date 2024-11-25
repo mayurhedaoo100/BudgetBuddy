@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Picker } from '@react-native-picker/picker';
 
-export default function HomeScreen() {
+const HomeScreen = ({ navigation }) => {
   const [transactions, setTransactions] = useState([]);
-  const [transactionName, setTransactionName] = useState('');
-  const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState('Food'); // Default category
-
-  const categories = ['Food', 'Transport', 'Shopping', 'Entertainment', 'Bills', 'Others'];
 
   useEffect(() => {
     const loadTransactions = async () => {
@@ -26,79 +20,54 @@ export default function HomeScreen() {
     loadTransactions();
   }, []);
 
-  useEffect(() => {
-    const saveTransactions = async () => {
-      try {
-        await AsyncStorage.setItem('transactions', JSON.stringify(transactions));
-      } catch (error) {
-        console.error("Failed to save transactions:", error);
-      }
-    };
-
-    saveTransactions();
-  }, [transactions]);
-
-  const handleAddTransaction = () => {
-    if (transactionName && amount) {
-      setTransactions([
-        ...transactions,
-        { id: Math.random().toString(), name: transactionName, amount: parseFloat(amount), category },
-      ]);
-      setTransactionName('');
-      setAmount('');
-      setCategory('Food'); // Reset category to default
-    }
-  };
-
-  const handleDeleteTransaction = (id) => {
-    setTransactions(transactions.filter((transaction) => transaction.id !== id));
+  const getTotalIncome = () => {
+    return transactions
+      .filter((transaction) => transaction.type === 'Income')
+      .reduce((total, transaction) => total + transaction.amount, 0);
   };
 
   const getTotalExpenses = () => {
-    return transactions.reduce((total, transaction) => total + transaction.amount, 0);
+    return transactions
+      .filter((transaction) => transaction.type === 'Expense')
+      .reduce((total, transaction) => total + transaction.amount, 0);
+  };
+
+  const getBalance = () => {
+    return getTotalIncome() - getTotalExpenses();
+  };
+
+  const handleDeleteTransaction = async (id) => {
+    const updatedTransactions = transactions.filter((transaction) => transaction.id !== id);
+    setTransactions(updatedTransactions);
+    await AsyncStorage.setItem('transactions', JSON.stringify(updatedTransactions));
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Budget Buddy</Text>
-      
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Transaction Name"
-          value={transactionName}
-          onChangeText={setTransactionName}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Amount"
-          value={amount}
-          onChangeText={setAmount}
-          keyboardType="numeric"
-        />
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={category}
-            onValueChange={(itemValue) => setCategory(itemValue)}
-          >
-            {categories.map((cat) => (
-              <Picker.Item key={cat} label={cat} value={cat} />
-            ))}
-          </Picker>
-        </View>
-        <Button title="Add Transaction" onPress={handleAddTransaction} />
-      </View>
 
+      <Text style={styles.total}>Total Income: ₹{getTotalIncome().toFixed(2)}</Text>
       <Text style={styles.total}>Total Expenses: ₹{getTotalExpenses().toFixed(2)}</Text>
+      <Text style={styles.total}>Balance: ₹{getBalance().toFixed(2)}</Text>
+
+      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddTransaction')}>
+        <Text style={styles.addButtonText}>Add Transaction</Text>
+      </TouchableOpacity>
 
       <FlatList
         data={transactions}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.transactionItem}>
-            <Text>{item.name}</Text>
+            <Text>{item.name} ({item.type})</Text>
             <Text>₹{item.amount}</Text>
-            <Text style={styles.category}>{item.category}</Text>
+            <Text>{item.category}</Text>
+            <Text>Date: {formatDate(item.date)}</Text>
             <TouchableOpacity onPress={() => handleDeleteTransaction(item.id)}>
               <Text style={styles.deleteButton}>Delete</Text>
             </TouchableOpacity>
@@ -107,7 +76,7 @@ export default function HomeScreen() {
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -119,20 +88,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
-  inputContainer: {
-    marginBottom: 20,
+  total: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
-  input: {
-    borderWidth: 1,
+  addButton: {
+    backgroundColor: '#4CAF50',
     padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
+    marginBottom: 20,
+    alignItems: 'center',
   },
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    marginBottom: 10,
+  addButtonText: {
+    color: 'white',
+    fontSize: 18,
   },
   transactionItem: {
     flexDirection: 'row',
@@ -140,18 +109,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
   },
-  total: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  category: {
-    fontSize: 14,
-    fontStyle: 'italic',
-    color: '#666',
-  },
   deleteButton: {
     color: 'red',
     fontWeight: 'bold',
   },
 });
+
+export default HomeScreen;

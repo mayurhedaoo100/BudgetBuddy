@@ -37,18 +37,18 @@ A simple and intuitive expense tracker app built with React Native. Manage your 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/mayurhedaoo100/budget-buddy.git
+   git clone https://github.com/mayurhedaoo100/BudgetBuddy.git
 
 2. Navigate to the project directory:
-```bash
-   cd budget-buddy
+   ```bash
+   cd BudgetBuddy
 
 3. Install dependencies:
-```bash
+   ```bash
    npm install
 
 4. Start the development server:
-```bash
+   ```bash
    npx expo start
 
 ---

@@ -1,50 +1,70 @@
-# Welcome to your Expo app 👋
+# Budget Buddy 💰
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A simple and intuitive expense tracker app built with React Native. Manage your finances with ease by tracking your income, expenses, and overall balance. 
 
-## Get started
+---
 
-1. Install dependencies
+## Features 🚀
+- Add income and expense transactions.
+- Categorize transactions for better tracking.
+- View total balance, income, and expenses.
+- Delete transactions easily.
+- Persistent storage with `AsyncStorage`.
 
+---
+
+## Screenshots 📸
+
+### Home Screen
+![Home Screen](./assets/screenshots/home_screen.jpg)
+
+### Add Transaction
+![Add Expense](./assets/screenshots/add_expense.jpg)
+
+### Transactions List
+![Add Income](./assets/screenshots/add_income.jpg)
+
+---
+
+## Tech Stack 🛠️
+- **Framework**: React Native
+- **Storage**: AsyncStorage
+- **Icons**: React Native Vector Icons
+
+---
+
+## Installation 🖥️
+
+1. Clone the repository:
    ```bash
-   npm install
-   ```
+   git clone https://github.com/mayurhedaoo100/budget-buddy.git
 
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+2. Navigate to the project directory:
 ```bash
-npm run reset-project
-```
+   cd budget-buddy
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+3. Install dependencies:
+```bash
+   npm install
 
-## Learn more
+4. Start the development server:
+```bash
+   npx expo start
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Contributing 🤝
 
-## Join the community
+Feel free to contribute to the project by submitting issues or creating pull requests. Let's make Budget Buddy even better!
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## License 📄
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+---
+
+## Author 👤
+
+Developed with ❤️ by Mayur Hedaoo.

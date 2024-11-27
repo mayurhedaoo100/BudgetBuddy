@@ -1,34 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ route, navigation }) => {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    const loadTransactions = async () => {
+    const fetchTransactions = async () => {
       try {
-        const storedTransactions = await AsyncStorage.getItem('transactions');
+        const storedTransactions = await AsyncStorage.getItem("transactions");
         if (storedTransactions) {
           setTransactions(JSON.parse(storedTransactions));
         }
       } catch (error) {
-        console.error("Failed to load transactions:", error);
+        console.error("Error fetching transactions:", error);
       }
     };
 
-    loadTransactions();
-  }, []);
+    fetchTransactions(); // Fetch transactions when HomeScreen is focused or when `route.params.refresh` is triggered
+
+    // Refresh on navigation if refresh is passed
+    if (route.params?.refresh) {
+      fetchTransactions();
+    }
+  }, [route.params?.refresh]);
 
   const getTotalIncome = () => {
     return transactions
-      .filter((transaction) => transaction.type === 'Income')
+      .filter((transaction) => transaction.type === "Income")
       .reduce((total, transaction) => total + transaction.amount, 0);
   };
 
   const getTotalExpenses = () => {
     return transactions
-      .filter((transaction) => transaction.type === 'Expense')
+      .filter((transaction) => transaction.type === "Expense")
       .reduce((total, transaction) => total + transaction.amount, 0);
   };
 
@@ -37,81 +49,178 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleDeleteTransaction = async (id) => {
-    const updatedTransactions = transactions.filter((transaction) => transaction.id !== id);
+    const updatedTransactions = transactions.filter(
+      (transaction) => transaction.id !== id
+    );
     setTransactions(updatedTransactions);
-    await AsyncStorage.setItem('transactions', JSON.stringify(updatedTransactions));
+    await AsyncStorage.setItem(
+      "transactions",
+      JSON.stringify(updatedTransactions)
+    );
   };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Budget Buddy</Text>
+    <View style={{ flex: 1, backgroundColor: "#b37cf7" }}>
+      <View style={{ padding: 20 }}>
+        <Text
+          style={{
+            fontSize: 32,
+            fontWeight: "bold",
+            marginBottom: 20,
+            color: "white",
+          }}
+        >
+          Budget Buddy
+        </Text>
 
-      <Text style={styles.total}>Total Income: ₹{getTotalIncome().toFixed(2)}</Text>
-      <Text style={styles.total}>Total Expenses: ₹{getTotalExpenses().toFixed(2)}</Text>
-      <Text style={styles.total}>Balance: ₹{getBalance().toFixed(2)}</Text>
+        <View
+          style={{ padding: 10, paddingLeft:15, backgroundColor: "white", borderRadius: 10 }}
+        >
+          <Text>Remaining Balance</Text>
+          <Text style={{ fontSize: 24, fontWeight: "500" }}>
+            ₹{getBalance().toFixed(2)}
+          </Text>
+        </View>
 
-      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddTransaction')}>
-        <Text style={styles.addButtonText}>Add Transaction</Text>
-      </TouchableOpacity>
-
-      <FlatList
-        data={transactions}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.transactionItem}>
-            <Text>{item.name} ({item.type})</Text>
-            <Text>₹{item.amount}</Text>
-            <Text>{item.category}</Text>
-            <Text>Date: {formatDate(item.date)}</Text>
-            <TouchableOpacity onPress={() => handleDeleteTransaction(item.id)}>
-              <Text style={styles.deleteButton}>Delete</Text>
-            </TouchableOpacity>
+        <View style={{ flexDirection: "row", marginTop: 10 }}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection:"row",
+              backgroundColor: "white",
+              padding: 10,
+              borderRadius: 10,
+              marginRight: 5,
+              alignItems:"center"
+            }}
+          >
+            
+            <Ionicons style={{transform : [{ rotate: "45deg"}]}} name="arrow-down-circle" color={"#5fb05d"} size={40}/>
+            <View style={{marginLeft:10}}>
+            <Text>Income</Text>
+            <Text style={{ fontSize: 18, fontWeight: "500" }}>
+              ₹{getTotalIncome().toFixed(2)}
+            </Text>
+            
           </View>
-        )}
-      />
+          </View>
+
+          <View
+            style={{
+              flex: 1,
+              flexDirection:"row",
+              backgroundColor: "white",
+              padding: 10,
+              borderRadius: 10,
+              marginLeft: 5,
+              alignItems:"center"
+            }}
+          >
+            <Ionicons style={{transform: [{rotate: "45deg"}]}} name="arrow-up-circle" color={"#f7584d"} size={40}/>
+            <View style={{marginLeft:10}}>
+            <Text>Expenses</Text>
+            <Text style={{ fontSize: 18, fontWeight: "500" }}>
+              ₹{getTotalExpenses().toFixed(2)}
+            </Text>
+            </View>
+          </View>
+        
+      </View>
+      </View>
+
+      <View
+        style={{
+          flex: 1,
+          position: "relative",
+          borderTopRightRadius: 25,
+          borderTopLeftRadius: 25,
+          padding: 20,
+          backgroundColor: "white",
+        }}
+      >
+        <View
+          style={{ position: "absolute", bottom: 30, right: 30, zIndex: 1 }}
+        >
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#9375f0",
+              alignItems: "center",
+              borderRadius: 50,
+              width: 50,
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onPress={() => navigation.navigate("AddTransaction")}
+          >
+            <Text style={{ color: "white", fontSize: 30 }}>+</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={{ fontSize: 16, fontWeight: "500", marginLeft: 5, marginBottom:10}}>
+          Recent Transactions
+        </Text>
+
+        <FlatList
+          data={transactions.reverse()}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View
+              style={{
+                flexDirection: "row",
+                paddingVertical: 10,
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: "#e8e9ff",
+                  padding: 10,
+                  borderRadius: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicons name={item.icon} size={25} color={"gray"} />
+              </View>
+
+              <View style={{ flex: 1, marginHorizontal: 15 }}>
+                <Text style={{fontSize:16, fontWeight:"500"}} numberOfLines={1} ellipsizeMode="tail" >{item.name}</Text>
+                <View>
+                  <Text style={{textAlign:"left"}} numberOfLines={1} ellipsizeMode="tail">{item.category}</Text>
+                  <Text style={{flex:1, fontSize:12, textAlign:"left", color:"gray"}}>{formatDate(item.date)}</Text>
+                </View>
+              </View>
+
+              <Text style={[{marginHorizontal:15, fontSize:16, fontWeight:"700"}, item.type === "Income" ? {color:"#5fb05d"} : {color:"#f7584d"}]}>{item.type === "Income" ? `+ ₹${item.amount}` : `- ₹${item.amount}`}</Text>
+
+              <TouchableOpacity
+                onPress={() => handleDeleteTransaction(item.id)}
+              >
+                <Ionicons name="trash" size={24} color={"gray"} />
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  header: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  total: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  addButton: {
-    backgroundColor: '#4CAF50',
-    padding: 10,
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  addButtonText: {
-    color: 'white',
-    fontSize: 18,
-  },
   transactionItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
     padding: 10,
-    borderBottomWidth: 1,
   },
   deleteButton: {
-    color: 'red',
-    fontWeight: 'bold',
+    color: "red",
+    fontWeight: "bold",
   },
 });
 

@@ -15,14 +15,9 @@ A simple and intuitive expense tracker app built with React Native. Manage your 
 
 ## Screenshots 📸
 
-### Home Screen
-![Home Screen](./assets/screenshots/home_screen.jpg)
-
-### Add Transaction
-![Add Expense](./assets/screenshots/add_expense.jpg)
-
-### Transactions List
-![Add Income](./assets/screenshots/add_income.jpg)
+| Home/Main Screen | Add Expense | Add Income |
+|-------------|-----------------|-------------------|
+| ![Home Screen](./assets/screenshots/home_screen.jpg) | ![Add Expense](./assets/screenshots/add_expense.jpg) | ![Add Income](./assets/screenshots/add_income.jpg) |
 
 ---
 

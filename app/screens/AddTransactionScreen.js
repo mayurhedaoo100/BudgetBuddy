@@ -15,7 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 const AddTransactionScreen = ({ navigation }) => {
   const [transactionName, setTransactionName] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState();
   const [category, setCategory] = useState();
   const [icon, setIcon] = useState();
   const [type, setType] = useState("Expense");
@@ -148,8 +148,10 @@ const AddTransactionScreen = ({ navigation }) => {
           backgroundColor: "#e8e9ff",
           borderRadius: 8,
           paddingHorizontal: 15,
+          paddingVertical: 10,
           marginBottom: 10,
         }}
+        maxLength={40}
         placeholder="Transaction Name"
         value={transactionName}
         onChangeText={setTransactionName}
@@ -162,6 +164,7 @@ const AddTransactionScreen = ({ navigation }) => {
             alignItems: "center",
             backgroundColor: "#e8e9ff",
             paddingHorizontal: 15,
+            paddingVertical: 10,
             borderRadius: 8,
             marginRight: 5,
           }}
@@ -173,6 +176,7 @@ const AddTransactionScreen = ({ navigation }) => {
             value={amount}
             onChangeText={setAmount}
             keyboardType="numeric"
+            maxLength={8}
           />
         </View>
         <TouchableOpacity
@@ -183,6 +187,7 @@ const AddTransactionScreen = ({ navigation }) => {
             backgroundColor: "#e8e9ff",
             borderRadius: 8,
             paddingHorizontal: 15,
+            paddingVertical: 10,
             justifyContent: "center",
             alignItems: "center",
             marginLeft: 5,
@@ -215,7 +220,10 @@ const AddTransactionScreen = ({ navigation }) => {
         >
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
-              onPress={() => {setCategory("Salary"); setIcon("card-outline")}}
+              onPress={() => {
+                setCategory("Salary");
+                setIcon("card-outline");
+              }}
               style={{
                 backgroundColor: category === "Salary" ? "#9375f0" : "#e8e9ff",
                 width: 55,
@@ -235,7 +243,10 @@ const AddTransactionScreen = ({ navigation }) => {
           </View>
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
-              onPress={() => {setCategory("Investments"); setIcon("stats-chart-outline")}}
+              onPress={() => {
+                setCategory("Investments");
+                setIcon("stats-chart-outline");
+              }}
               style={{
                 backgroundColor:
                   category === "Investments" ? "#9375f0" : "#e8e9ff",
@@ -258,7 +269,10 @@ const AddTransactionScreen = ({ navigation }) => {
           </View>
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
-              onPress={() => {setCategory("Business"); setIcon("briefcase-outline")}}
+              onPress={() => {
+                setCategory("Business");
+                setIcon("briefcase-outline");
+              }}
               style={{
                 backgroundColor:
                   category === "Business" ? "#9375f0" : "#e8e9ff",
@@ -279,7 +293,10 @@ const AddTransactionScreen = ({ navigation }) => {
           </View>
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
-              onPress={() => {setCategory("Others"); setIcon("extension-puzzle-outline")}}
+              onPress={() => {
+                setCategory("Others");
+                setIcon("extension-puzzle-outline");
+              }}
               style={{
                 backgroundColor: category === "Others" ? "#9375f0" : "#e8e9ff",
                 width: 55,
@@ -311,7 +328,10 @@ const AddTransactionScreen = ({ navigation }) => {
         >
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
-              onPress={() => {setCategory("Food"); setIcon("fast-food-outline")}}
+              onPress={() => {
+                setCategory("Food");
+                setIcon("fast-food-outline");
+              }}
               style={{
                 backgroundColor: category === "Food" ? "#9375f0" : "#e8e9ff",
                 width: 55,
@@ -331,7 +351,10 @@ const AddTransactionScreen = ({ navigation }) => {
           </View>
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
-              onPress={() => {setCategory("Travel"); setIcon("subway-outline")}}
+              onPress={() => {
+                setCategory("Travel");
+                setIcon("subway-outline");
+              }}
               style={{
                 backgroundColor: category === "Travel" ? "#9375f0" : "#e8e9ff",
                 width: 55,
@@ -351,7 +374,10 @@ const AddTransactionScreen = ({ navigation }) => {
           </View>
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
-              onPress={() => {setCategory("Bills"); setIcon("receipt-outline")}}
+              onPress={() => {
+                setCategory("Bills");
+                setIcon("receipt-outline");
+              }}
               style={{
                 backgroundColor: category === "Bills" ? "#9375f0" : "#e8e9ff",
                 width: 55,
@@ -371,7 +397,10 @@ const AddTransactionScreen = ({ navigation }) => {
           </View>
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
-              onPress={() => {setCategory("Others"); setIcon("extension-puzzle-outline")}}
+              onPress={() => {
+                setCategory("Others");
+                setIcon("extension-puzzle-outline");
+              }}
               style={{
                 backgroundColor: category === "Others" ? "#9375f0" : "#e8e9ff",
                 width: 55,
@@ -420,6 +449,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor:"white"
   },
 });
 

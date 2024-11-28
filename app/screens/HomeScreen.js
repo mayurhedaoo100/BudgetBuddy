@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
+import { StatusBar } from "expo-status-bar";
 
 const HomeScreen = ({ route, navigation }) => {
   const [transactions, setTransactions] = useState([]);
@@ -52,7 +53,7 @@ const HomeScreen = ({ route, navigation }) => {
     const updatedTransactions = transactions.filter(
       (transaction) => transaction.id !== id
     );
-    setTransactions(updatedTransactions);
+    setTransactions(updatedTransactions.reverse());
     await AsyncStorage.setItem(
       "transactions",
       JSON.stringify(updatedTransactions)
@@ -67,6 +68,7 @@ const HomeScreen = ({ route, navigation }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#b37cf7" }}>
+      <StatusBar backgroundColor="#b37cf7" barStyle="light-content" />
       <View style={{ padding: 20 }}>
         <Text
           style={{
@@ -80,10 +82,10 @@ const HomeScreen = ({ route, navigation }) => {
         </Text>
 
         <View
-          style={{ padding: 10, paddingLeft:15, backgroundColor: "white", borderRadius: 10 }}
+          style={{ padding: 10, paddingLeft:15, backgroundColor: "white", borderRadius: 10, overflow:"hidden", }}
         >
           <Text>Remaining Balance</Text>
-          <Text style={{ fontSize: 24, fontWeight: "500" }}>
+          <Text numberOfLines={1} ellipsizeMode="tail" style={{ fontSize: 24, fontWeight: "500" }}>
             ₹{getBalance().toFixed(2)}
           </Text>
         </View>
@@ -97,14 +99,15 @@ const HomeScreen = ({ route, navigation }) => {
               padding: 10,
               borderRadius: 10,
               marginRight: 5,
-              alignItems:"center"
+              alignItems:"center",
+              overflow:"hidden",
             }}
           >
             
             <Ionicons style={{transform : [{ rotate: "45deg"}]}} name="arrow-down-circle" color={"#5fb05d"} size={40}/>
             <View style={{marginLeft:10}}>
             <Text>Income</Text>
-            <Text style={{ fontSize: 18, fontWeight: "500" }}>
+            <Text numberOfLines={1} ellipsizeMode="tail" style={{ fontSize: 18, fontWeight: "500" }}>
               ₹{getTotalIncome().toFixed(2)}
             </Text>
             
@@ -119,13 +122,14 @@ const HomeScreen = ({ route, navigation }) => {
               padding: 10,
               borderRadius: 10,
               marginLeft: 5,
-              alignItems:"center"
+              alignItems:"center",
+              overflow:"hidden",
             }}
           >
             <Ionicons style={{transform: [{rotate: "45deg"}]}} name="arrow-up-circle" color={"#f7584d"} size={40}/>
             <View style={{marginLeft:10}}>
             <Text>Expenses</Text>
-            <Text style={{ fontSize: 18, fontWeight: "500" }}>
+            <Text numberOfLines={1} ellipsizeMode="tail" style={{ fontSize: 18, fontWeight: "500" }}>
               ₹{getTotalExpenses().toFixed(2)}
             </Text>
             </View>
@@ -198,7 +202,7 @@ const HomeScreen = ({ route, navigation }) => {
                 </View>
               </View>
 
-              <Text style={[{marginHorizontal:15, fontSize:16, fontWeight:"700"}, item.type === "Income" ? {color:"#5fb05d"} : {color:"#f7584d"}]}>{item.type === "Income" ? `+ ₹${item.amount}` : `- ₹${item.amount}`}</Text>
+              <Text numberOfLines={1} style={[{ marginHorizontal:15, fontSize:16, fontWeight:"700"}, item.type === "Income" ? {color:"#5fb05d"} : {color:"#f7584d"}]}>{item.type === "Income" ? `+ ₹${item.amount}` : `- ₹${item.amount}`}</Text>
 
               <TouchableOpacity
                 onPress={() => handleDeleteTransaction(item.id)}
